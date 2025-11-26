@@ -712,10 +712,15 @@ export class PlanetaTierra extends Sprite {
     }
 
     render(ctx) {
+        // Verificar que el sprite sea visible y tenga posición válida
+        if (!this.visible || this.opacity <= 0) return;
+        if (this.radius <= 0) return;
+        if (!this.x || !this.y || isNaN(this.x) || isNaN(this.y)) return;
+        
         const scale = 1 + Math.sin(this.pulse) * 0.1;
         
         // Glow dorado
-        const glowRadius = 80 + Math.sin(this.pulse * 2) * 15;
+        const glowRadius = Math.max(this.radius * 1.6, 50) + Math.sin(this.pulse * 2) * 15;
         const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, glowRadius);
         gradient.addColorStop(0, 'rgba(255, 215, 0, 0.6)');
         gradient.addColorStop(1, 'rgba(255, 215, 0, 0)');
@@ -729,15 +734,21 @@ export class PlanetaTierra extends Sprite {
         ctx.scale(scale, scale);
         ctx.rotate(this.rotation);
         
-        if (this.image && this.image.complete) {
-            const size = this.radius * 2;
+        // Verificar que la imagen esté disponible y tenga dimensiones válidas
+        if (this.image && this.image.complete && this.image.width > 0 && this.image.height > 0) {
+            const size = Math.max(this.radius * 2, 20); // Tamaño mínimo de 20px
             ctx.drawImage(this.image, -size / 2, -size / 2, size, size);
         } else {
-            // Fallback
+            // Fallback visible para debugging
             ctx.fillStyle = '#4a90e2';
             ctx.beginPath();
-            ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+            ctx.arc(0, 0, Math.max(this.radius, 25), 0, Math.PI * 2);
             ctx.fill();
+            
+            // Dibujar borde para debugging
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
         }
         
         ctx.restore();

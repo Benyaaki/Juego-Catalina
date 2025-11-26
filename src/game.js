@@ -476,11 +476,30 @@ export class Game {
         const targetX = centerX;
         const targetY = centerY;
         const planetaImg = this.assetLoader.getImage('planetaTierra');
-        this.target = new PlanetaTierra(targetX, targetY, planetaImg);
-        if (this.isMobile && this.target.radius) {
-            this.target.radius *= mobileScale;
+        
+        // Verificar que la imagen se cargó correctamente
+        if (!planetaImg) {
+            console.error('❌ No se pudo cargar la imagen del planeta tierra');
+        } else {
+            console.log('✅ Imagen del planeta tierra cargada:', planetaImg.complete, planetaImg.width, planetaImg.height);
         }
+        
+        this.target = new PlanetaTierra(targetX, targetY, planetaImg);
+        
+        // Aplicar escala móvil solo si es necesario, pero asegurar tamaño mínimo
+        if (this.isMobile && this.target.radius) {
+            const newRadius = this.target.radius * mobileScale;
+            this.target.radius = Math.max(newRadius, 30); // Tamaño mínimo de 30px
+        }
+        
+        // Asegurar que el target sea visible
+        this.target.visible = true;
+        this.target.opacity = 1;
+        this.target.collected = false;
+        
         this.target.message = '¡Llegaste al Planeta Tierra!';
+        
+        console.log('✅ Planeta Tierra creado en:', targetX, targetY, 'radius:', this.target.radius);
     }
 
     checkCollisions() {
@@ -748,8 +767,17 @@ export class Game {
                     (this.ship.x - this.target.x) ** 2 + (this.ship.y - this.target.y) ** 2
                 );
                 this.target.render(this.ctx, shipDistance);
+            } else if (this.target instanceof PlanetaTierra) {
+                // PlanetaTierra tiene su propio método draw() que llama a render()
+                if (this.target.draw) {
+                    this.target.draw(this.ctx);
+                } else if (this.target.render) {
+                    this.target.render(this.ctx);
+                }
             } else if (this.target.draw) {
                 this.target.draw(this.ctx);
+            } else if (this.target.render) {
+                this.target.render(this.ctx);
             }
         }
         
