@@ -2,7 +2,7 @@
 export const gameTargets = [
     {
         type: 'choripan',
-        message: 'Encontraste el delicioso choripán espacial supremo 🌭✨'
+        message: 'Encontraste el choripán espacial supremo… cuidado, este te deja repitiendo en 3 galaxias distintas'
     },
     {
         type: 'lodin',
@@ -10,15 +10,15 @@ export const gameTargets = [
     },
     {
         type: 'vino',
-        message: 'Noooo, has encontrado el vino chileno a nivel cósmico 🍷🚀'
+        message: 'Noooo… hallaste el vino chileno pero nivel interplanetario. Con una tonta copita estai pa mear a la abuela de la Nustas'
     },
     {
         type: 'antofagasta',
-        message: 'Llegaste a Antofagasta… por favor huye ☀️🏜️'
+        message: 'Llegaste a Antofagasta… cuidado con los peruanos (Tu gente)'
     },
     {
         type: 'ticket',
-        message: 'Wnnnn es el ticket de acceso completo a cualquier concierto de cualquier cantante (Milo J no se lo merece) 🎟️🎵'
+        message: 'Pase libre pa’ cualquier concierto… excepto pa’ Milo J porque no estamos pa’ hueás.'
     },
     {
         type: 'odin',

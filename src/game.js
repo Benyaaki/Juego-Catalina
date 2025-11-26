@@ -552,10 +552,10 @@ export class Game {
         if (this.target.type === 'antofagasta') {
             this.uiManager.showMessage('Advertencia: has llegado a Antofagasta. Se recomienda huir inmediatamente ☀🏜️', true);
         } else if (this.target.type === 'pokemon') {
-            this.uiManager.showMessage('¡Te felicito amiga, has encontrado la carta mas cara (Según chatgpt, no tengo puta idea) 🎴🔥', true);
+            this.uiManager.showMessage('¡La hiciste! Encontraste la carta más cara del universo. (Creo… según ChatGPT, yo no tengo puta idea)', true);
         } else if (this.target.type === 'odin') {
             this.explodeDiente();
-            this.uiManager.showMessage('¡Catalina! Has rescatado al gordito Odin! Es hora de volver a casa, nos esperan 💖', true);
+            this.uiManager.showMessage('¡Catitaaa! Has rescatado al gordito Odin! Ahora ya tenemos que irnos, tu linda familia te espera', true);
         } else if (this.level === 7) {
             // Nivel final: completar juego
             this.uiManager.showMessage(this.target.message || '¡Llegaste al Planeta Tierra!', true);
