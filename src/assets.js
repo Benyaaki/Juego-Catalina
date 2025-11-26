@@ -7,12 +7,12 @@ export class AssetLoader {
 
     async loadAll() {
         const imagePaths = {
-            fondo: 'img/nueva-galaxia.png',
+            fondo: 'img/fondo-galaxia.png',
             nave: 'img/nave-espacial.png',
             choripan: 'img/choripan.png',
             antofagasta: 'img/antofagasta.png',
             vino: 'img/vino.png',
-            planeta: 'img/planeta-tierra-2.png',
+            planetaTierra: 'img/planeta-tierra-2.png',
             ticket: 'img/ticket.png',
             pokemon: 'img/pokemon.png',
             misil: 'img/misil.png',
