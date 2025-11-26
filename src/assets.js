@@ -7,7 +7,7 @@ export class AssetLoader {
 
     async loadAll() {
         const imagePaths = {
-            fondo: 'img/fondo-galaxia.png',
+            fondo: 'img/nueva-galaxia.png',
             nave: 'img/nave-espacial.png',
             choripan: 'img/choripan.png',
             antofagasta: 'img/antofagasta.png',
