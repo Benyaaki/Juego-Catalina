@@ -1,0 +1,382 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Nunito', sans-serif;
+    overflow: hidden;
+    background: #000; /* Fondo negro como fallback */
+}
+
+html {
+    background: #000; /* Asegurar que html también sea negro */
+}
+
+.screen {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Pantalla Principal */
+#main-menu {
+    background-image: url('../img/Nueva galaxia.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #000; /* Fallback si la imagen no carga */
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+#main-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.15); /* Overlay suave para mejorar legibilidad */
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+.menu-content {
+    text-align: center;
+    z-index: 1;
+    position: relative;
+    background: transparent !important; /* Asegurar que no tenga fondo */
+}
+
+.title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #d4a5a5;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: float 3s ease-in-out infinite;
+}
+
+.subtitle {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #b8a9c9;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 6px rgba(0, 0, 0, 0.4), 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: float 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ffb6c1 0%, #dda0dd 100%);
+    border: none;
+    padding: 1.2rem 3rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(212, 165, 165, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(212, 165, 165, 0.6);
+}
+
+.btn-primary:active {
+    transform: translateY(-1px);
+}
+
+/* Pantalla de Juego */
+#game-screen {
+    background: linear-gradient(180deg, #1a0a2e 0%, #2d1b4e 50%, #1a0a2e 100%);
+    position: relative;
+}
+
+#game-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.counter {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.8rem 2rem;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #d4a5a5;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+.message-panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.message-content {
+    background: linear-gradient(135deg, #ffeef8 0%, #f0e6ff 100%);
+    padding: 3rem;
+    border-radius: 30px;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#message-text {
+    font-size: 1.5rem;
+    color: #8b6f9e;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #d4a5a5 0%, #b8a9c9 100%);
+    border: none;
+    padding: 0.8rem 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    font-family: 'Nunito', sans-serif;
+    color: white;
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(139, 111, 158, 0.4);
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 111, 158, 0.6);
+}
+
+/* Pantalla de Victoria */
+#victory-screen {
+    background: linear-gradient(135deg, #ffeef8 0%, #f0e6ff 50%, #e6f3ff 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+#victory-screen::before {
+    content: '✨';
+    position: absolute;
+    font-size: 3rem;
+    animation: sparkle 2s ease-in-out infinite;
+    top: 10%;
+    left: 10%;
+}
+
+#victory-screen::after {
+    content: '🐶';
+    position: absolute;
+    font-size: 3rem;
+    animation: sparkle 2s ease-in-out infinite 0.5s;
+    top: 20%;
+    right: 15%;
+}
+
+@keyframes sparkle {
+    0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+    50% { transform: scale(1.3) rotate(180deg); opacity: 1; }
+}
+
+.victory-content {
+    text-align: center;
+    z-index: 1;
+    position: relative;
+}
+
+.victory-title {
+    font-size: 4rem;
+    font-weight: 700;
+    color: #d4a5a5;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: bounce 1s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.victory-message {
+    font-size: 2rem;
+    color: #b8a9c9;
+    margin-bottom: 3rem;
+    font-weight: 600;
+}
+
+/* Pantalla Final */
+#final-screen {
+    background: url('../img/Todos esperando.png') center/cover no-repeat;
+    position: relative;
+    overflow: hidden;
+}
+
+#final-screen::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 0;
+}
+
+.final-content {
+    text-align: center;
+    z-index: 1;
+    position: relative;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 3rem;
+    border-radius: 30px;
+    max-width: 700px;
+    margin: 0 auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.5s ease;
+}
+
+.final-title {
+    font-size: 34px !important;
+    font-weight: 700;
+    color: #d4a5a5;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    animation: bounce 1s ease;
+}
+
+.final-message {
+    font-size: 14px !important;
+    color: #8b6f9e;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#final-screen p,
+#final-screen .final-message,
+#final-screen .final-text {
+    font-size: 14px !important;
+    line-height: 1.25;
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#final-screen h1 {
+    font-size: 34px !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.5rem;
+    }
+    
+    .btn-primary {
+        font-size: 1.2rem;
+        padding: 1rem 2rem;
+    }
+    
+    .victory-title {
+        font-size: 2.5rem;
+    }
+    
+    .victory-message {
+        font-size: 1.5rem;
+    }
+    
+    .final-title {
+        font-size: 28px !important;
+    }
+    
+    .final-message {
+        font-size: 12px !important;
+    }
+    
+    #final-screen p,
+    #final-screen .final-message {
+        font-size: 12px !important;
+    }
+    
+    #final-screen h1 {
+        font-size: 28px !important;
+    }
+    
+    .final-content {
+        padding: 2rem;
+        margin: 1rem;
+    }
+}
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universo de Catalina - Feliz Cumpleaños</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="main-menu" class="screen">
+        <div class="menu-content">
+            <h1 class="title">Universo de Catalina</h1>
+            <h2 class="subtitle">Feliz Cumpleaños</h2>
+            <button id="start-btn" class="btn-primary">Entrar al Universo</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen hidden">
+        <canvas id="game-canvas"></canvas>
+        <div id="message-panel" class="message-panel hidden">
+            <div class="message-content">
+                <p id="message-text"></p>
+                <button id="close-message-btn" class="btn-secondary">Continuar</button>
+            </div>
+        </div>
+        <div id="counter" class="counter">
+            <span id="counter-text">Nivel 1 / 7</span>
+        </div>
+    </div>
+
+    <div id="victory-screen" class="screen hidden">
+        <div class="victory-content">
+            <h1 class="victory-title">¡Feliz cumpleaños Catalina!</h1>
+            <p class="victory-message">Tu universo está completo ✨🐶🌭🍷💖</p>
+            <button id="restart-btn" class="btn-primary">Volver a jugar</button>
+        </div>
+    </div>
+
+    <div id="final-screen" class="screen hidden">
+        <div class="final-content">
+            <h1 class="final-title">¡Lo lograste, Catalina!</h1>
+            <p class="final-message">
+                Gracias por recorrer este pequeño universo conmigo, Catalina.<br><br>
+                Rescataste cada una de las cosas que sé que te hacen feliz,<br>
+                y eso hace que este viaje sea tan especial como tú.<br><br>
+                Eres alguien increíble, brillante y llena de luz.<br>
+                Me alegra poder celebrar tu vida con algo hecho con cariño.<br><br>
+                Feliz cumpleaños, amiga hermosa.<br><br>
+                Tu amigo que te ama.
+            </p>
+            <button id="final-restart-btn" class="btn-primary">Volver a jugar</button>
+        </div>
+    </div>
+
+    <script type="module" src="../src/main.js"></script>
+</body>
+</html>
+
