@@ -740,12 +740,12 @@ export class Game {
     }
 
     render() {
-        // Dibujar fondo de galaxia
-        const fondoImg = this.assetLoader.getImage('fondo');
-        if (fondoImg && fondoImg.complete) {
-            drawBackground(this.ctx, fondoImg, this.canvas.width, this.canvas.height);
+        // Dibujar fondo de galaxia - SIEMPRE usa 'fondo' que apunta a nueva-galaxia.png
+        const bg = this.assetLoader.getImage('fondo');
+        if (bg && bg.complete && bg.width > 0 && bg.height > 0) {
+            drawBackground(this.ctx, bg, this.canvas.width, this.canvas.height);
         } else {
-            // Fallback
+            // Fallback solo si la imagen no está disponible
             this.ctx.fillStyle = '#1a0a2e';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
