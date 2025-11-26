@@ -419,7 +419,7 @@ export class Game {
         const targetX = centerX + offsetX;
         const targetY = centerY - offsetY;
         const antofagastaImg = this.assetLoader.getImage('antofagasta');
-        this.target = new Target(targetX, targetY, 'antofagasta', '¡¡Amiga ten cuidado!! Has llegado a Antofagasta. Tierra de nadie, te recomiendo huyas de inmediato ☀🏜️', antofagastaImg);
+        this.target = new Target(targetX, targetY, 'antofagasta', 'Llegaste a Antofagasta… cuidado con los peruanos (Tu gente)', antofagastaImg);
         if (this.isMobile && this.target.radius) {
             this.target.radius *= mobileScale;
         }
@@ -550,7 +550,7 @@ export class Game {
         
         // Manejo especial por tipo de objetivo
         if (this.target.type === 'antofagasta') {
-            this.uiManager.showMessage('Advertencia: has llegado a Antofagasta. Se recomienda huir inmediatamente ☀🏜️', true);
+            this.uiManager.showMessage('Llegaste a Antofagasta… cuidado con los peruanos (Tu gente)', true);
         } else if (this.target.type === 'pokemon') {
             this.uiManager.showMessage('¡La hiciste! Encontraste la carta más cara del universo. (Creo… según ChatGPT, yo no tengo puta idea)', true);
         } else if (this.target.type === 'odin') {
