@@ -22,7 +22,7 @@ python -m http.server 8000
 python -m SimpleHTTPServer 8000
 ```
 
-Luego abre tu navegador en: `http://localhost:8000/public/`
+Luego abre tu navegador en: `http://localhost:8000/`
 
 ### Opción 2: Servidor Local Simple (Node.js)
 
@@ -34,27 +34,28 @@ npm install -g http-server
 http-server -p 8000
 ```
 
-Luego abre tu navegador en: `http://localhost:8000/public/`
+Luego abre tu navegador en: `http://localhost:8000/`
 
 ### Opción 3: Live Server (VS Code)
 
 1. Instala la extensión "Live Server" en VS Code
-2. Haz clic derecho en `public/index.html`
+2. Haz clic derecho en `index.html`
 3. Selecciona "Open with Live Server"
 
 ## 📁 Estructura del Proyecto
 
 ```
 /
-├── public/
-│   ├── index.html          # Página principal
-│   └── styles.css          # Estilos pastel
+├── index.html              # Página principal (raíz)
+├── styles.css              # Estilos pastel (raíz)
 ├── src/
 │   ├── main.js            # Punto de entrada
 │   ├── game.js            # Lógica principal del juego
 │   ├── sprites.js         # Clases de sprites (planetas, perritos, etc.)
 │   ├── messages.js        # Mensajes de humor absurdo
-│   └── ui.js              # Manejo de interfaz de usuario
+│   ├── ui.js              # Manejo de interfaz de usuario
+│   └── assets.js          # Carga de imágenes
+├── img/                    # Imágenes del juego
 └── README.md
 ```
 

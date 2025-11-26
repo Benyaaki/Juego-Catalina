@@ -7,18 +7,18 @@ export class AssetLoader {
 
     async loadAll() {
         const imagePaths = {
-            fondo: '../img/Nueva galaxia.png',
-            nave: '../img/Nave espacial.png',
-            choripan: '../img/Choripan.png',
-            vino: '../img/Vino.png',
-            antofagasta: '../img/Antofagasta.png',
-            ticket: '../img/Ticket.png',
-            pokemon: '../img/pokemon.png',
-            planetaTierra: '../img/Planeta Tierra 2.png',
-            todosEsperando: '../img/Todos esperando.png',
-            misil: '../img/Misil.png',
-            dienteMalvado: '../img/Diente malvado.png',
-            odin: '../img/Odin.png'
+            fondo: 'img/Nueva galaxia.png',
+            nave: 'img/Nave espacial.png',
+            choripan: 'img/Choripan.png',
+            vino: 'img/Vino.png',
+            antofagasta: 'img/Antofagasta.png',
+            ticket: 'img/Ticket.png',
+            pokemon: 'img/pokemon.png',
+            planetaTierra: 'img/Planeta Tierra 2.png',
+            todosEsperando: 'img/Todos esperando.png',
+            misil: 'img/Misil.png',
+            dienteMalvado: 'img/Diente malvado.png',
+            odin: 'img/Odin.png'
         };
 
         const loadPromises = Object.entries(imagePaths).map(([key, path]) => {
