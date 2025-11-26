@@ -31,7 +31,7 @@ html {
 
 /* Pantalla Principal */
 #main-menu {
-    background-image: url('img/Nueva galaxia.png');
+    background-image: url('img/nueva-galaxia.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -270,7 +270,7 @@ html {
 
 /* Pantalla Final */
 #final-screen {
-    background: url('img/Todos esperando.png') center/cover no-repeat;
+    background: url('img/todos-esperando.png') center/cover no-repeat;
     position: relative;
     overflow: hidden;
 }
@@ -378,5 +378,84 @@ html {
         padding: 2rem;
         margin: 1rem;
     }
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+    .title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    
+    #start-btn {
+        font-size: 1.1rem;
+        padding: 14px 24px;
+    }
+    
+    .btn-primary {
+        font-size: 1.1rem;
+        padding: 14px 24px;
+    }
+    
+    .btn-secondary {
+        font-size: 1rem;
+        padding: 0.7rem 1.5rem;
+    }
+    
+    .counter {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+        top: 10px;
+    }
+    
+    .message-content {
+        padding: 2rem;
+        margin: 1rem;
+        max-width: 90%;
+    }
+    
+    #message-text {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .victory-title {
+        font-size: 2rem;
+    }
+    
+    .victory-message {
+        font-size: 1.2rem;
+    }
+    
+    .final-title {
+        font-size: 24px !important;
+    }
+    
+    .final-message {
+        font-size: 11px !important;
+        line-height: 1.3;
+    }
+    
+    .final-content {
+        padding: 1.5rem;
+        margin: 0.5rem;
+    }
+}
+
+/* Prevenir zoom en doble toque */
+* {
+    touch-action: manipulation;
+}
+
+/* Asegurar que el canvas ocupe toda la pantalla en móviles */
+#game-canvas {
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 

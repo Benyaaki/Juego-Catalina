@@ -432,32 +432,48 @@ export class Ship extends Sprite {
         this.rotation = 0;
         this.image = image;
         this.size = 50;
+        this.externalVelocity = false; // Flag para velocidad externa (táctil)
     }
 
     update(gamePaused = false) {
         // No actualizar si el juego está pausado
         if (gamePaused) return;
         
-        // Aceleración basada en teclas
-        let accelX = 0;
-        let accelY = 0;
-        
-        if (this.keys.up) accelY -= this.acceleration;
-        if (this.keys.down) accelY += this.acceleration;
-        if (this.keys.left) accelX -= this.acceleration;
-        if (this.keys.right) accelX += this.acceleration;
-        
-        // Aplicar aceleración a velocidad
-        this.velocityX += accelX;
-        this.velocityY += accelY;
-        
-        // Aplicar fricción
-        this.velocityX *= this.friction;
-        this.velocityY *= this.friction;
-        
-        // Actualizar posición
-        this.x += this.velocityX * this.speed;
-        this.y += this.velocityY * this.speed;
+        // Si hay velocidad establecida externamente (táctil), usarla directamente
+        if (this.externalVelocity) {
+            this.x += this.velocityX * this.speed;
+            this.y += this.velocityY * this.speed;
+            // Aplicar fricción suave
+            this.velocityX *= 0.85;
+            this.velocityY *= 0.85;
+            // Limpiar si es muy pequeña
+            if (Math.abs(this.velocityX) < 0.1 && Math.abs(this.velocityY) < 0.1) {
+                this.velocityX = 0;
+                this.velocityY = 0;
+                this.externalVelocity = false;
+            }
+        } else {
+            // Aceleración basada en teclas (solo desktop)
+            let accelX = 0;
+            let accelY = 0;
+            
+            if (this.keys.up) accelY -= this.acceleration;
+            if (this.keys.down) accelY += this.acceleration;
+            if (this.keys.left) accelX -= this.acceleration;
+            if (this.keys.right) accelX += this.acceleration;
+            
+            // Aplicar aceleración a velocidad
+            this.velocityX += accelX;
+            this.velocityY += accelY;
+            
+            // Aplicar fricción
+            this.velocityX *= this.friction;
+            this.velocityY *= this.friction;
+            
+            // Actualizar posición
+            this.x += this.velocityX * this.speed;
+            this.y += this.velocityY * this.speed;
+        }
         
         // Mantener la nave dentro de los límites
         this.x = Math.max(this.radius, Math.min(window.innerWidth - this.radius, this.x));

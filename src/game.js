@@ -53,16 +53,84 @@ export class Game {
 
     setupCanvas() {
         this.resizeCanvas();
-        window.addEventListener('resize', () => this.resizeCanvas());
+        window.addEventListener('resize', () => {
+            this.resizeCanvas();
+            // Recalcular posiciones relativas si es necesario
+            if (this.ship) {
+                this.ship.x = Math.min(this.ship.x, this.canvas.width - this.ship.radius);
+                this.ship.y = Math.min(this.ship.y, this.canvas.height - this.ship.radius);
+            }
+        });
+        
+        // Prevenir zoom en doble toque en móviles
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
     }
 
     resizeCanvas() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+        // Asegurar que el canvas se renderice correctamente en móviles
+        this.canvas.style.width = window.innerWidth + 'px';
+        this.canvas.style.height = window.innerHeight + 'px';
     }
 
     setupEventListeners() {
-        // Ya no usamos clics, solo teclado
+        // Detectar si es móvil
+        this.isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                       (window.innerWidth <= 768 && 'ontouchstart' in window);
+        
+        // Controles táctiles para móvil
+        if (this.isMobile) {
+            this.setupTouchControls();
+        }
+    }
+    
+    setupTouchControls() {
+        // Prevenir scroll y zoom
+        this.canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+        
+        this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            
+            if (!this.ship || this.pausedForMessage || !this.isRunning) return;
+            
+            const touch = e.touches[0];
+            const rect = this.canvas.getBoundingClientRect();
+            
+            // Calcular posición relativa al canvas
+            const touchX = touch.clientX - rect.left;
+            const touchY = touch.clientY - rect.top;
+            
+            // Mover la nave hacia el punto táctil con suavidad
+            const dx = touchX - this.ship.x;
+            const dy = touchY - this.ship.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance > 5) {
+                // Normalizar dirección y aplicar velocidad
+                const speed = 3.5; // Velocidad de seguimiento táctil
+                this.ship.velocityX = (dx / distance) * speed;
+                this.ship.velocityY = (dy / distance) * speed;
+                this.ship.externalVelocity = true; // Marcar como velocidad externa
+            }
+        }, { passive: false });
+        
+        this.canvas.addEventListener('touchend', (e) => {
+            e.preventDefault();
+            // Reducir velocidad gradualmente al soltar
+            if (this.ship) {
+                this.ship.externalVelocity = true; // Mantener flag para fricción suave
+            }
+        }, { passive: false });
     }
 
     setupKeyboard() {
@@ -73,29 +141,32 @@ export class Game {
             ArrowRight: false
         };
 
-        window.addEventListener('keydown', (e) => {
-            if (this.keys.hasOwnProperty(e.key)) {
-                e.preventDefault();
-                this.keys[e.key] = true;
-                if (this.ship) {
-                    this.updateShipKeys();
+        // Solo configurar teclado si no es móvil
+        if (!this.isMobile) {
+            window.addEventListener('keydown', (e) => {
+                if (this.keys.hasOwnProperty(e.key)) {
+                    e.preventDefault();
+                    this.keys[e.key] = true;
+                    if (this.ship) {
+                        this.updateShipKeys();
+                    }
                 }
-            }
-        });
+            });
 
-        window.addEventListener('keyup', (e) => {
-            if (this.keys.hasOwnProperty(e.key)) {
-                e.preventDefault();
-                this.keys[e.key] = false;
-                if (this.ship) {
-                    this.updateShipKeys();
+            window.addEventListener('keyup', (e) => {
+                if (this.keys.hasOwnProperty(e.key)) {
+                    e.preventDefault();
+                    this.keys[e.key] = false;
+                    if (this.ship) {
+                        this.updateShipKeys();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     updateShipKeys() {
-        if (this.ship) {
+        if (this.ship && !this.isMobile) {
             this.ship.keys = {
                 up: this.keys.ArrowUp,
                 down: this.keys.ArrowDown,
@@ -103,6 +174,16 @@ export class Game {
                 right: this.keys.ArrowRight
             };
         }
+    }
+    
+    getMobileScale() {
+        // Escala para móviles: reducir tamaño de sprites en pantallas pequeñas
+        if (window.innerWidth < 600) {
+            return 0.7;
+        } else if (window.innerWidth < 900) {
+            return 0.85;
+        }
+        return 1;
     }
 
     clearLevel() {
@@ -144,7 +225,17 @@ export class Game {
         if (!naveImg) {
             console.error('❌ No se encontró la imagen de la nave');
         }
-        this.ship = new Ship(100, centerY, naveImg);
+        // Ajustar posición inicial en móviles
+        const startX = this.isMobile ? Math.min(100, this.canvas.width * 0.15) : 100;
+        this.ship = new Ship(startX, centerY, naveImg);
+        
+        // Aplicar escala móvil a la nave
+        if (this.isMobile) {
+            const scale = this.getMobileScale();
+            this.ship.size = this.ship.size * scale;
+            this.ship.radius = this.ship.radius * scale;
+        }
+        
         this.updateShipKeys();
         console.log('✅ Nave creada en posición:', this.ship.x, this.ship.y);
         
@@ -246,84 +337,149 @@ export class Game {
     }
 
     setupLevel1(centerX, centerY) {
+        // Ajustar posiciones para móviles
+        const mobileScale = this.getMobileScale();
+        const offsetX = this.isMobile ? this.canvas.width * 0.3 : 300;
+        const offsetY = this.isMobile ? this.canvas.height * 0.2 : 200;
+        
         // Enemigo genérico en el centro
         const enemigoImg = this.assetLoader.getImage('dienteMalvado');
         this.enemigo = new Enemigo(centerX, centerY, enemigoImg);
+        if (this.isMobile && this.enemigo.radius) {
+            this.enemigo.radius *= mobileScale;
+        }
         
         // Objetivo: Choripán (alejado del centro)
-        const targetX = centerX + 300;
-        const targetY = centerY - 200;
+        const targetX = centerX + offsetX;
+        const targetY = centerY - offsetY;
         const choripanImg = this.assetLoader.getImage('choripan');
         this.target = new Target(targetX, targetY, 'choripan', getTargetMessage('choripan'), choripanImg);
+        if (this.isMobile && this.target.radius) {
+            this.target.radius *= mobileScale;
+        }
     }
 
     setupLevel2(centerX, centerY) {
+        const mobileScale = this.getMobileScale();
+        const offsetX = this.isMobile ? this.canvas.width * 0.3 : 300;
+        const offsetY = this.isMobile ? this.canvas.height * 0.2 : 200;
+        
         // Enemigo genérico
         const enemigoImg = this.assetLoader.getImage('dienteMalvado');
         this.enemigo = new Enemigo(centerX, centerY, enemigoImg);
+        if (this.isMobile && this.enemigo.radius) {
+            this.enemigo.radius *= mobileScale;
+        }
         
         // Objetivo: Vino
-        const targetX = centerX - 300;
-        const targetY = centerY + 200;
+        const targetX = centerX - offsetX;
+        const targetY = centerY + offsetY;
         const vinoImg = this.assetLoader.getImage('vino');
         this.target = new Target(targetX, targetY, 'vino', getTargetMessage('vino'), vinoImg);
+        if (this.isMobile && this.target.radius) {
+            this.target.radius *= mobileScale;
+        }
     }
 
     setupLevel3(centerX, centerY) {
+        const mobileScale = this.getMobileScale();
+        const offsetX = this.isMobile ? this.canvas.width * 0.25 : 250;
+        const offsetY = this.isMobile ? this.canvas.height * 0.25 : 250;
+        
         // Enemigo genérico
         const enemigoImg = this.assetLoader.getImage('dienteMalvado');
         this.enemigo = new Enemigo(centerX, centerY, enemigoImg);
+        if (this.isMobile && this.enemigo.radius) {
+            this.enemigo.radius *= mobileScale;
+        }
         
         // Objetivo: Ticket
-        const targetX = centerX + 250;
-        const targetY = centerY + 250;
+        const targetX = centerX + offsetX;
+        const targetY = centerY + offsetY;
         const ticketImg = this.assetLoader.getImage('ticket');
         this.target = new Target(targetX, targetY, 'ticket', getTargetMessage('ticket'), ticketImg);
+        if (this.isMobile && this.target.radius) {
+            this.target.radius *= mobileScale;
+        }
     }
 
     setupLevel4(centerX, centerY) {
+        const mobileScale = this.getMobileScale();
+        const offsetX = this.isMobile ? this.canvas.width * 0.2 : 200;
+        const offsetY = this.isMobile ? this.canvas.height * 0.15 : 150;
+        
         // Nivel normal con enemigo y misiles
         const enemigoImg = this.assetLoader.getImage('dienteMalvado');
         this.enemigo = new Enemigo(centerX, centerY, enemigoImg);
+        if (this.isMobile && this.enemigo.radius) {
+            this.enemigo.radius *= mobileScale;
+        }
         
         // Objetivo: Antofagasta
-        const targetX = centerX + 200;
-        const targetY = centerY - 150;
+        const targetX = centerX + offsetX;
+        const targetY = centerY - offsetY;
         const antofagastaImg = this.assetLoader.getImage('antofagasta');
         this.target = new Target(targetX, targetY, 'antofagasta', '¡¡Amiga ten cuidado!! Has llegado a Antofagasta. Tierra de nadie, te recomiendo huyas de inmediato ☀🏜️', antofagastaImg);
+        if (this.isMobile && this.target.radius) {
+            this.target.radius *= mobileScale;
+        }
     }
 
     setupLevel5(centerX, centerY) {
+        const mobileScale = this.getMobileScale();
+        const offsetX = this.isMobile ? this.canvas.width * 0.3 : 300;
+        const offsetY = this.isMobile ? this.canvas.height * 0.15 : 150;
+        
         // Nivel Pokémon - enemigo genérico con misiles
         const enemigoImg = this.assetLoader.getImage('dienteMalvado');
         this.enemigo = new Enemigo(centerX, centerY, enemigoImg);
+        if (this.isMobile && this.enemigo.radius) {
+            this.enemigo.radius *= mobileScale;
+        }
         
         // Objetivo: Pokémon
-        const targetX = centerX - 300;
-        const targetY = centerY + 150;
+        const targetX = centerX - offsetX;
+        const targetY = centerY + offsetY;
         const pokemonImg = this.assetLoader.getImage('pokemon');
         this.target = new Target(targetX, targetY, 'pokemon', getTargetMessage('pokemon'), pokemonImg);
+        if (this.isMobile && this.target.radius) {
+            this.target.radius *= mobileScale;
+        }
     }
 
     setupLevel6(centerX, centerY) {
+        const mobileScale = this.getMobileScale();
+        const offsetX = this.isMobile ? this.canvas.width * 0.35 : 350;
+        
         // Diente malvado como enemigo final
         const dienteImg = this.assetLoader.getImage('dienteMalvado');
         this.enemigo = new DienteMalvado(centerX, centerY, dienteImg);
+        if (this.isMobile && this.enemigo.radius) {
+            this.enemigo.radius *= mobileScale;
+        }
         
         // Objetivo: Odín
-        const targetX = centerX - 350;
+        const targetX = centerX - offsetX;
         const targetY = centerY;
         const odinImg = this.assetLoader.getImage('odin');
         this.target = new Target(targetX, targetY, 'odin', getTargetMessage('odin'), odinImg);
+        if (this.isMobile && this.target.radius) {
+            this.target.radius *= mobileScale;
+        }
     }
 
     setupLevel7(centerX, centerY) {
+        const mobileScale = this.getMobileScale();
+        
         // Sin enemigos - nivel final
         // Objetivo: Planeta Tierra
         const targetX = centerX;
         const targetY = centerY;
         const planetaImg = this.assetLoader.getImage('planetaTierra');
         this.target = new PlanetaTierra(targetX, targetY, planetaImg);
+        if (this.isMobile && this.target.radius) {
+            this.target.radius *= mobileScale;
+        }
         this.target.message = '¡Llegaste al Planeta Tierra!';
     }
 
@@ -543,9 +699,14 @@ export class Game {
         }
         
         // Actualizar misiles (solo si no está pausado)
+        const mobileScale = this.getMobileScale();
         this.misiles.forEach(misil => {
             if (this.ship) {
                 misil.update(this.ship.x, this.ship.y);
+            }
+            // Aplicar escala móvil a misiles
+            if (this.isMobile && misil.radius) {
+                misil.radius = 16 * mobileScale; // Tamaño base * escala
             }
         });
         
